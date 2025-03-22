@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:url_launcher/url_launcher.dart';
 
-final _authorizationEndpoint = Uri.parse('https://github.com/login/oauth/authorize');
+final _authorizationEndpoint = Uri.parse(
+  'https://github.com/login/oauth/authorize',
+);
 final _tokenEndpoint = Uri.parse('https://github.com/login/oauth/access_token');
 
 class GithubLoginWidget extends StatefulWidget {
@@ -26,7 +27,8 @@ class GithubLoginWidget extends StatefulWidget {
   State<GithubLoginWidget> createState() => _GithubLoginState();
 }
 
-typedef AuthenticatedBuilder = Widget Function(BuildContext context, oauth2.Client client);
+typedef AuthenticatedBuilder =
+    Widget Function(BuildContext context, oauth2.Client client);
 
 class _GithubLoginState extends State<GithubLoginWidget> {
   HttpServer? _redirectServer;
@@ -74,11 +76,16 @@ class _GithubLoginState extends State<GithubLoginWidget> {
       secret: widget.githubClientSecret,
       httpClient: _JsonAcceptingHttpClient(),
     );
-    var authorizationUrl = grant.getAuthorizationUrl(redirectUrl, scopes: widget.githubScopes);
+    var authorizationUrl = grant.getAuthorizationUrl(
+      redirectUrl,
+      scopes: widget.githubScopes,
+    );
 
     await _redirect(authorizationUrl);
     var responseQueryParameters = await _listen();
-    var client = await grant.handleAuthorizationResponse(responseQueryParameters);
+    var client = await grant.handleAuthorizationResponse(
+      responseQueryParameters,
+    );
     return client;
   }
 
