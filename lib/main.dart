@@ -4,7 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:window_to_front/window_to_front.dart';
 
 import 'package:github_client/github_oauth_credentials.dart';
-import 'package:github_client/github_login.dart';
+import 'package:github_client/src/github_login.dart';
+import 'package:github_client/src/github_summary.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,16 +43,9 @@ class MyHomePage extends StatelessWidget {
     return GithubLoginWidget(
       builder: (context, httpClient) {
         WindowToFront.activate();
-        return FutureBuilder<CurrentUser>(
-          future: viewerDetail(httpClient.credentials.accessToken),
-          builder: (context, snapshot) {
-            return Scaffold(
-              appBar: AppBar(title: Text(title), elevation: 2),
-              body: Center(
-                child: Text(snapshot.hasData ? 'Hello ${snapshot.data!.login}!' : 'Retrieving viewer login details...'),
-              ),
-            );
-          },
+        return Scaffold(
+          appBar: AppBar(title: Text(title), elevation: 2),
+          body: GitHubSummary(gitHub: _getGitHub(httpClient.credentials.accessToken)),
         );
       },
       githubClientId: githubClientId,
@@ -61,7 +55,35 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-Future<CurrentUser> viewerDetail(String accessToken) async {
-  final gitHub = GitHub(auth: Authentication.withToken(accessToken));
-  return gitHub.users.getCurrentUser();
-}
+GitHub _getGitHub(String accessToken) {
+  return GitHub(auth: Authentication.withToken(accessToken));
+}  
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return GithubLoginWidget(
+//       builder: (context, httpClient) {
+//         WindowToFront.activate();
+//         return FutureBuilder<CurrentUser>(
+//           future: viewerDetail(httpClient.credentials.accessToken),
+//           builder: (context, snapshot) {
+//             return Scaffold(
+//               appBar: AppBar(title: Text(title), elevation: 2),
+//               body: Center(
+//                 child: Text(snapshot.hasData ? 'Hello ${snapshot.data!.login}!' : 'Retrieving viewer login details...'),
+//               ),
+//             );
+//           },
+//         );
+//       },
+//       githubClientId: githubClientId,
+//       githubClientSecret: githubClientSecret,
+//       githubScopes: githubScopes,
+//     );
+//   }
+// }
+
+// Future<CurrentUser> viewerDetail(String accessToken) async {
+//   final gitHub = GitHub(auth: Authentication.withToken(accessToken));
+//   return gitHub.users.getCurrentUser();
+// }
