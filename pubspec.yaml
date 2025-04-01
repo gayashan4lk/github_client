@@ -38,6 +38,9 @@ dependencies:
   oauth2: ^2.0.3
   url_launcher: ^6.3.1
   flutter_dotenv: ^5.2.1
+  window_to_front:
+    path: ../flutter-demo-github-desktop-client/window_to_front
+  github: ^9.24.0
 
 dev_dependencies:
   flutter_test:
